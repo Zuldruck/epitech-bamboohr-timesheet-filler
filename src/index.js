@@ -84,7 +84,7 @@ async function main()
     // Save the entries
     await page.click('.actions--2ohA0 > button');
     
-    // Wait 500 ms
+    // Wait 2s
     await page.waitForTimeout(2000);
   }
 
