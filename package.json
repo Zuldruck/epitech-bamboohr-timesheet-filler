@@ -2,5 +2,16 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "puppeteer": "^12.0.0"
-  }
+  },
+  "name": "epitech-bamboohr-timesheet-filler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lucas Sanchez",
+  "license": "ISC",
+  "description": ""
 }
