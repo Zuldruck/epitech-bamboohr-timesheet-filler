@@ -1,6 +1,7 @@
 # epitech-bamboohr-timesheet-filler
 
-Puppeteer script to automatically fill the Epitech's BambooHR timesheet
+Puppeteer script to automatically fill the Epitech's BambooHR timesheet.
+It updates your current timesheet with the needed worked days with a 9am-12pm / 2pm-6pm time entries.
 
 ## Installation
 
