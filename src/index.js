@@ -22,6 +22,16 @@ function getActualMonthDays(previousPeriodForgotten = false)
   return new Date(year, month, 0).getDate();
 }
 
+function getActualMonthDaysOffset(previousPeriodForgotten = false)
+{
+  const today = new Date();
+  const month = today.getMonth() - (previousPeriodForgotten ? 1 : 0);
+  const year = today.getFullYear();
+  const firstMonthDay = new Date(year, month, 1).getDay();
+
+  return firstMonthDay - (firstMonthDay === 1 ? 1 : 0);
+}
+
 async function main()
 {
   const browser = await puppeteer.launch();
@@ -57,11 +67,15 @@ async function main()
   // Get the number of days in the month
   const daysInMonth = getActualMonthDays(process.env.PREVIOUS_PERIOD_FORGOTTEN);
 
+  // Get the number of days to reach previous Monday
+  const daysOffset = getActualMonthDaysOffset(process.env.PREVIOUS_PERIOD_FORGOTTEN);
+  console.log(`Days offset: ${daysOffset}`);
+
   // Iterate over the days
   for (let i = 0; i < daysInMonth; i++) {
     console.log(`Checking day ${i + 1}...`);
     // Get the day
-    const element = await page.waitForSelector(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1}) > div.TimesheetSlat__day > div.TimesheetSlat__dayOfWeek`); // select the element
+    const element = await page.waitForSelector(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__day > div.TimesheetSlat__dayOfWeek`); // select the element
     const dayInnerText = await element.evaluate(el => el.innerText);
 
     const dayFormatting = daysFormatting.find(day => day.en === dayInnerText);
@@ -73,7 +87,7 @@ async function main()
     console.log(`Opening entries modal for ${formattedDay} ${i + 1}`);
   
     // Click on the timesheet's day
-    await page.click(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1}) > div.TimesheetSlat__dataWrapper > div > div.TimesheetSlat__multipleContent > a`);
+    await page.click(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__dataWrapper > div > div.TimesheetSlat__multipleContent > a`);
 
     console.log(`Creating entries for ${formattedDay} ${i + 1}`);
     // Type the time
