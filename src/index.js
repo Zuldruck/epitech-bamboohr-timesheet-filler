@@ -13,10 +13,10 @@ const daysFormatting = [
 
 const workedDays = process.env.WORKED_DAYS.split(',');
 
-function getActualMonthDays()
+function getActualMonthDays(previousPeriodForgotten = false)
 {
   const today = new Date();
-  const month = today.getMonth() + 1;
+  const month = today.getMonth() + (!previousPeriodForgotten ? 1 : 0);
   const year = today.getFullYear();
 
   return new Date(year, month, 0).getDate();
@@ -44,8 +44,18 @@ async function main()
     page.click('#TIME_TRACKING > div > section > a'),
   ]);
 
+  // Check if previous period was forgotten
+  if (process.env.PREVIOUS_PERIOD_FORGOTTEN) {
+    await page.click('#js-timesheet > div > div.TimesheetHeader > div > div.TimesheetHeader__controls > div.TimesheetHeader__period > div > div > div');
+
+    await Promise.all([
+      page.waitForNavigation(),
+      page.click('.fab-MenuList__scrollContainer > div:nth-child(2)'),
+    ]);
+  }
+
   // Get the number of days in the month
-  const daysInMonth = getActualMonthDays();
+  const daysInMonth = getActualMonthDays(process.env.PREVIOUS_PERIOD_FORGOTTEN);
 
   // Iterate over the days
   for (let i = 0; i < daysInMonth; i++) {
