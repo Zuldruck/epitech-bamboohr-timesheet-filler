@@ -11,7 +11,10 @@ const daysFormatting = [
   { en: 'Sun', fr: 'dim' },
 ];
 
-const workedDays = process.env.WORKED_DAYS.split(',');
+const Login = process.env.LOGIN;
+const Password = process.env.PASSWORD;
+const WorkedDays = process.env.WORKED_DAYS.split(',');
+const PreviousPeriodForgotten = process.env.PREVIOUS_PERIOD_FORGOTTEN;
 
 function getActualMonthDays(previousPeriodForgotten = false)
 {
@@ -40,8 +43,8 @@ async function main()
 
   // Login
   console.log('Logging in...');
-  await page.type('#lemail', process.env.LOGIN);
-  await page.type('#password', process.env.PASSWORD);
+  await page.type('#lemail', Login);
+  await page.type('#password', Password);
   await Promise.all([
     page.waitForNavigation(),
     page.click('#passwordFields > div.login-actions > button.fab-Button.fab-Button--large'),
@@ -55,7 +58,7 @@ async function main()
   ]);
 
   // Check if previous period was forgotten
-  if (process.env.PREVIOUS_PERIOD_FORGOTTEN) {
+  if (PreviousPeriodForgotten) {
     await page.click('#js-timesheet > div > div.TimesheetHeader > div > div.TimesheetHeader__controls > div.TimesheetHeader__period > div > div > div');
 
     await Promise.all([
@@ -65,10 +68,10 @@ async function main()
   }
 
   // Get the number of days in the month
-  const daysInMonth = getActualMonthDays(process.env.PREVIOUS_PERIOD_FORGOTTEN);
+  const daysInMonth = getActualMonthDays(PreviousPeriodForgotten);
 
   // Get the number of days to reach previous Monday
-  const daysOffset = getActualMonthDaysOffset(process.env.PREVIOUS_PERIOD_FORGOTTEN);
+  const daysOffset = getActualMonthDaysOffset(PreviousPeriodForgotten);
   console.log(`Days offset: ${daysOffset}`);
 
   // Iterate over the days
@@ -81,7 +84,7 @@ async function main()
     const dayFormatting = daysFormatting.find(day => day.en === dayInnerText);
     const formattedDay = dayFormatting ? dayFormatting.fr : day;
 
-    if (!workedDays.includes(formattedDay))
+    if (!WorkedDays.includes(formattedDay))
       continue;
     
     console.log(`Opening entries modal for ${formattedDay} ${i + 1}`);
