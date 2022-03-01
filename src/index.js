@@ -14,7 +14,9 @@ const daysFormatting = [
 const Login = process.env.LOGIN;
 const Password = process.env.PASSWORD;
 const WorkedDays = process.env.WORKED_DAYS.split(',');
-const PreviousPeriodForgotten = process.env.PREVIOUS_PERIOD_FORGOTTEN;
+const PreviousPeriodForgotten = process.env.PREVIOUS_PERIOD_FORGOTTEN
+  && (process.env.PREVIOUS_PERIOD_FORGOTTEN.toLowerCase() === 'true'
+  || process.env.PREVIOUS_PERIOD_FORGOTTEN === '1');
 
 function getActualMonthDays(previousPeriodForgotten = false)
 {
