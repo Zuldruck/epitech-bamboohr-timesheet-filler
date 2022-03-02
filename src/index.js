@@ -1,5 +1,7 @@
-const puppeteer = require('puppeteer');
-require('dotenv').config();
+import puppeteer from 'puppeteer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const daysFormatting = [
   { en: 'Mon', fr: 'lun' },
