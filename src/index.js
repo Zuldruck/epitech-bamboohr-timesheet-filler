@@ -1,7 +1,5 @@
 import puppeteer from 'puppeteer';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { Login, Password, WorkedDays, PreviousPeriodForgotten } from './environment.js';
 
 const daysFormatting = [
   { en: 'Mon', fr: 'lun' },
@@ -12,13 +10,6 @@ const daysFormatting = [
   { en: 'Sat', fr: 'sam' },
   { en: 'Sun', fr: 'dim' },
 ];
-
-const Login = process.env.LOGIN;
-const Password = process.env.PASSWORD;
-const WorkedDays = process.env.WORKED_DAYS.split(',');
-const PreviousPeriodForgotten = process.env.PREVIOUS_PERIOD_FORGOTTEN
-  && (process.env.PREVIOUS_PERIOD_FORGOTTEN.toLowerCase() === 'true'
-  || process.env.PREVIOUS_PERIOD_FORGOTTEN === '1');
 
 function getActualMonthDays(previousPeriodForgotten = false)
 {
