@@ -81,6 +81,13 @@ async function main()
 
     if (!WorkedDays.includes(formattedDay))
       continue;
+
+    // Check if the day is already filled
+    try {
+      await page.waitForSelector(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__dataWrapper > div > div.TimesheetSlat__multipleContent > div > div.TimesheetSlat__contentDivider`, { timeout: 500 });
+      console.log('This day is already filled');
+      continue;
+    } catch (e) {}
     
     console.log(`Opening entries modal for ${formattedDay} ${i + 1}`);
   
