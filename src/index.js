@@ -71,6 +71,9 @@ async function main()
 
   // Iterate over the days
   for (let i = 0; i < daysInMonth; i++) {
+    // Just for clarity
+    console.log();
+
     console.log(`Checking day ${i + 1}...`);
     // Get the day
     const element = await page.waitForSelector(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__day > div.TimesheetSlat__dayOfWeek`); // select the element
