@@ -80,7 +80,7 @@ async function main()
     const dayInnerText = await element.evaluate(el => el.innerText);
 
     const dayFormatting = daysFormatting.find(day => day.en === dayInnerText);
-    const formattedDay = dayFormatting ? dayFormatting.fr : day;
+    const formattedDay = dayFormatting ? dayFormatting.fr : dayInnerText;
 
     if (!WorkedDays.includes(formattedDay))
       continue;
