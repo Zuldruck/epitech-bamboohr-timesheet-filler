@@ -82,8 +82,10 @@ async function main()
     const dayFormatting = daysFormatting.find(day => day.en === dayInnerText);
     const formattedDay = dayFormatting ? dayFormatting.fr : dayInnerText;
 
-    if (!WorkedDays.includes(formattedDay))
+    if (!WorkedDays.includes(formattedDay)) {
+      console.log(`${formattedDay} is not in the list of worked days. Skipping...`);
       continue;
+    }
 
     // Check if the day is already filled
     try {
