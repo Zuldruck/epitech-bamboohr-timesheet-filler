@@ -75,48 +75,56 @@ async function main()
     console.log();
 
     console.log(`Checking day ${i + 1}...`);
-    // Get the day
-    const element = await page.waitForSelector(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__day > div.TimesheetSlat__dayOfWeek`); // select the element
-    const dayInnerText = await element.evaluate(el => el.innerText);
-
-    const dayFormatting = daysFormatting.find(day => day.en === dayInnerText);
-    const formattedDay = dayFormatting ? dayFormatting.fr : dayInnerText;
-
-    if (!WorkedDays.includes(formattedDay)) {
-      console.log(`${formattedDay} is not in the list of worked days. Skipping...`);
-      continue;
-    }
-
-    // Check if the day is already filled
     try {
-      await page.waitForSelector(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__dataWrapper > div > div.TimesheetSlat__multipleContent > div > div.TimesheetSlat__contentDivider`, { timeout: 500 });
-      console.log('This day is already filled');
-      continue;
-    } catch (e) {}
-    
-    console.log(`Opening entries modal for ${formattedDay} ${i + 1}`);
+      // Get the day
+      const element = await page.waitForSelector(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__day > div.TimesheetSlat__dayOfWeek`); // select the element
+      const dayInnerText = await element.evaluate(el => el.innerText);
   
-    // Click on the timesheet's day
-    await page.click(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__dataWrapper > div > div.TimesheetSlat__multipleContent > a`);
-
-    console.log(`Creating entries for ${formattedDay} ${i + 1}`);
-    // Type the time
-    await page.type('#fabricModalContent > div > form > div > div > div:nth-child(1) > div > input', '9:00');
-    await page.type('#fabricModalContent > div > form > div > div > div:nth-child(3) > div > input', '12:00');
-    
-    // Click on the "Add Entry" button
-    await page.click('#fabricModalContent > div > div > div.AddEditEntry__addEntryLink > a');
-
-    // Change time to PM
-    await page.click('#fabricModalContent > div > form > div:nth-child(2) > div > div:nth-child(1) > div > div > div > div > div');
-    await page.click('.fab-MenuList__scrollContainer > div:nth-child(2)');
+      const dayFormatting = daysFormatting.find(day => day.en === dayInnerText);
+      const formattedDay = dayFormatting ? dayFormatting.fr : dayInnerText;
   
-    // Type the time
-    await page.type('#fabricModalContent > div > form > div:nth-child(2) > div > div:nth-child(1) > div > input', '2:00');
-    await page.type('#fabricModalContent > div > form > div:nth-child(2) > div > div:nth-child(3) > div > input', '6:00');
-
-    // Save the entries
-    await page.click('.actions--2ohA0 > button');
+      if (!WorkedDays.includes(formattedDay)) {
+        console.log(`${formattedDay} is not in the list of worked days. Skipping...`);
+        continue;
+      }
+  
+      // Check if the day is already filled
+      try {
+        await page.waitForSelector(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__dataWrapper > div > div.TimesheetSlat__multipleContent > div > div.TimesheetSlat__contentDivider`, { timeout: 500 });
+        console.log('This day is already filled');
+        continue;
+      } catch (e) {}
+  
+      try {
+        console.log(`Opening entries modal for ${formattedDay} ${i + 1}`);
+      
+        // Click on the timesheet's day
+        await page.click(`#js-timesheet > div > div.TimesheetContent.js-timesheet-content > div.TimesheetEntries > form > div:nth-child(${i + 1 + daysOffset}) > div.TimesheetSlat__dataWrapper > div > div.TimesheetSlat__multipleContent > a`);
+    
+        console.log(`Creating entries for ${formattedDay} ${i + 1}`);
+        // Type the time
+        await page.type('#fabricModalContent > div > form > div > div > div:nth-child(1) > div > input', '9:00');
+        await page.type('#fabricModalContent > div > form > div > div > div:nth-child(3) > div > input', '12:00');
+        
+        // Click on the "Add Entry" button
+        await page.click('#fabricModalContent > div > div > div.AddEditEntry__addEntryLink > a');
+    
+        // Change time to PM
+        await page.click('#fabricModalContent > div > form > div:nth-child(2) > div > div:nth-child(1) > div > div > div > div > div');
+        await page.click('.fab-MenuList__scrollContainer > div:nth-child(2)');
+      
+        // Type the time
+        await page.type('#fabricModalContent > div > form > div:nth-child(2) > div > div:nth-child(1) > div > input', '2:00');
+        await page.type('#fabricModalContent > div > form > div:nth-child(2) > div > div:nth-child(3) > div > input', '6:00');
+    
+        // Save the entries
+        await page.click('.actions--2ohA0 > button');
+      } catch (e) {
+        console.log(`⚠️ Cannot create entries for ${formattedDay} ${i + 1}`);
+      }
+    } catch(e) {
+      console.log(`⚠️ Error checking day ${i + 1}`);
+    }
     
     // Wait 2s
     await page.waitForTimeout(2000);
