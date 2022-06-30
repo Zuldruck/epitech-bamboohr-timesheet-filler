@@ -45,6 +45,14 @@ async function main()
     page.click('#passwordFields > div.login-actions > button.fab-Button.fab-Button--large'),
   ]);
 
+  try {
+    console.log('Security Check...');
+    await Promise.all([
+      page.waitForNavigation(),
+      page.click('div.fab-Interstitial__outer > div > div.fab-Interstitial__card > div > div.fab-CardContent > div > div > button.jss-a4.jss-a7.MuiButton-root.jss-a13.MuiButton-contained.jss-a14.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-disableElevation.MuiButtonBase-root.css-3zk1ar'),
+    ]);
+  } catch (e) {}
+
   // Go to the timesheet page
   console.log('Going to the timesheet page...');
   await Promise.all([
